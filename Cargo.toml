@@ -1,0 +1,31 @@
+[package]
+name = "pushd"
+version = "0.0.1"
+authors = ["Dave Rolsky <autarch@urth.org>"]
+description = "A library that implements pushd"
+repository = "https://github.com/houseabsolute/pushd"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+edition = "2021"
+
+[dependencies]
+log = "0.4.20"
+thiserror = "1.0.50"
+
+[dev-dependencies]
+serial_test = "2.0.0"
+tempfile = "3.8.1"
+
+[package.metadata.release]
+tag-name = "v{{version}}"
+
+# workaround for https://github.com/cross-rs/cross/issues/1345
+[package.metadata.cross.target.x86_64-unknown-netbsd]
+pre-build = [
+    "mkdir -p /tmp/netbsd",
+    "curl https://cdn.netbsd.org/pub/NetBSD/NetBSD-9.2/amd64/binary/sets/base.tar.xz -O",
+    "tar -C /tmp/netbsd -xJf base.tar.xz",
+    "cp /tmp/netbsd/usr/lib/libexecinfo.so /usr/local/x86_64-unknown-netbsd/lib",
+    "rm base.tar.xz",
+    "rm -rf /tmp/netbsd",
+]
