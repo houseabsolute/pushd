@@ -81,7 +81,7 @@ impl Pushd {
             source: e,
         })?;
         debug!(
-            "set current dir to {} from {}",
+            "Set current dir to {} from {}.",
             path.as_ref().display(),
             cwd.display(),
         );
@@ -118,7 +118,7 @@ impl Pushd {
             return Ok(());
         }
 
-        debug!("setting current dir back to {}", self.orig.display());
+        debug!("Setting current dir back to {}.", self.orig.display());
         env::set_current_dir(&self.orig).map_err(|e| PushdError::SetCurrentDir {
             path: self.orig.clone(),
             source: e,
@@ -147,7 +147,10 @@ impl Drop for Pushd {
     fn drop(&mut self) {
         if let Err(e) = self.pop() {
             if !self.panic_on_err {
-                warn!("Could not return to original dir: {e}");
+                warn!(
+                    "Could not return to original dir {}: {e}",
+                    self.orig.display(),
+                );
                 return;
             }
 
