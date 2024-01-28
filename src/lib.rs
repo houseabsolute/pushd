@@ -2,7 +2,7 @@
 //! directory.
 //!
 //! When a [`Pushd`] struct is created it will call [`env::set_current_dir`]
-//! to change to the given directory. When the `Pushd` is dropped, it will
+//! to change to the given directory. When the [`Pushd`] is dropped, it will
 //! change back to the original directory.
 //!
 //! If the original directory doesn't exist, this error is ignored, since this
@@ -27,8 +27,8 @@
 //!
 //! # Panics
 //!
-//! The `Pushd` may panic if it cannot change back to the original directory
-//! when it's dropped. Use the [`new_no_panic`](Pushd::new_no_panic)
+//! The [`Pushd`] may panic if it cannot change back to the original directory
+//! when it's dropped. Use the [`Pushd::new_no_panic`](Pushd::new_no_panic)
 //! constructor to prevent this.
 use log::{debug, warn};
 use std::error::Error as StdError;
@@ -66,7 +66,7 @@ pub struct Pushd {
 impl Pushd {
     /// Constructs a new `Pushd` struct.
     ///
-    /// This accepts any type that implements `AsRef<Path>`.
+    /// This accepts any type that implements [`AsRef<Path>`].
     ///
     /// The `Pushd` returned by this constructor will panic if it cannot
     /// change back to its original directory when it is dropped.
@@ -100,7 +100,7 @@ impl Pushd {
     /// [`log::debug!`](https://docs.rs/log/latest/log/macro.debug.html) to
     /// log the directory change.
     ///
-    /// The `Pushd` created by this constructor cannot change back to the
+    /// If the [`Pushd`] created by this constructor cannot change back to the
     /// original directory when it is dropped, then it will simply call
     /// [`log::warn!`](https://docs.rs/log/latest/log/macro.warn.html) instead
     /// of panicking.
@@ -131,15 +131,15 @@ impl Pushd {
 impl Drop for Pushd {
     /// Changes back to the original directory.
     ///
-    /// When the `Pushd` struct is dropped, it will change back to the
+    /// When the [`Pushd`] struct is dropped, it will change back to the
     /// original directory. If this fails, it's behavior is as follows:
     ///
-    /// * If the `Pushd` was constructed with `new_no_panic`, it will log the
-    /// error by calling
+    /// * If the [`Pushd`] was constructed with [`Pushd::new_no_panic`], it
+    /// will log the error by calling
     /// [`log::warn!`](https://docs.rs/log/latest/log/macro.warn.html).
     ///
-    /// * If the `Pushd` was constructed with `new` and the error is an
-    /// [`io::Error`] and the error's [`io::Error::kind`] method returns
+    /// * If the [`Pushd`] was constructed with [`Pushd::new`] and the error
+    /// is an [`io::Error`] and the error's [`io::Error::kind`] method returns
     /// [`io::ErrorKind::NotFound`], it will do nothing.
     ///
     /// * Otherwise it will panic with the error from attempting to change the
