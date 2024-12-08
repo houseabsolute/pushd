@@ -9,12 +9,12 @@ license = "MIT OR Apache-2.0"
 edition = "2021"
 
 [dependencies]
-log = "0.4.20"
-thiserror = "1.0.50"
+log = "0.4.22"
+thiserror = "2.0.5"
 
 [dev-dependencies]
-serial_test = "2.0.0"
-tempfile = "3.8.1"
+serial_test = "3.2.0"
+tempfile = "3.14.0"
 
 [package.metadata.release]
 tag-name = "v{{version}}"
