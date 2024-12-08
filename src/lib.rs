@@ -74,6 +74,11 @@ impl Pushd {
     /// This will call
     /// [`log::debug!`](https://docs.rs/log/latest/log/macro.debug.html) to
     /// log the directory change.
+    ///
+    /// # Errors
+    ///
+    /// This method will return an error if the current directory cannot be determined. It will also
+    /// return an error if the current directory cannot be changed.
     pub fn new<P: AsRef<Path>>(path: P) -> Result<Pushd, PushdError> {
         let cwd = env::current_dir()?;
         env::set_current_dir(path.as_ref()).map_err(|e| PushdError::SetCurrentDir {
@@ -104,6 +109,11 @@ impl Pushd {
     /// original directory when it is dropped, then it will simply call
     /// [`log::warn!`](https://docs.rs/log/latest/log/macro.warn.html) instead
     /// of panicking.
+    ///
+    /// # Errors
+    ///
+    /// This method will return an error if the current directory cannot be determined. It will also
+    /// return an error if the current directory cannot be changed.
     pub fn new_no_panic<P: AsRef<Path>>(path: P) -> Result<Pushd, PushdError> {
         let mut pd = Self::new(path)?;
         pd.panic_on_err = false;
@@ -113,6 +123,10 @@ impl Pushd {
     /// Changes back to the original directory the first time it is called. If
     /// this method is called repeatedly it will not do anything on subsequent
     /// calls.
+    ///
+    /// # Errors
+    ///
+    /// This method return an error if the current directory cannot be changed.
     pub fn pop(&mut self) -> Result<(), PushdError> {
         if self.popped {
             return Ok(());
