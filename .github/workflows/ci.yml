@@ -15,63 +15,95 @@ env:
 
 jobs:
   test:
-    name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
-    runs-on: ${{ matrix.platform.os }}
+    name: ${{ matrix.platform.os-name }} with rust ${{ matrix.toolchain }}
+    runs-on: ${{ matrix.platform.runs-on }}
     strategy:
       fail-fast: false
       matrix:
         platform:
-          - os_name: Linux-x86_64
-            os: ubuntu-20.04
+          - os-name: FreeBSD-x86_64
+            runs-on: ubuntu-20.04
+            target: x86_64-unknown-freebsd
+            skip_tests: true
+          - os-name: Linux-x86_64
+            runs-on: ubuntu-20.04
             target: x86_64-unknown-linux-musl
-          - os_name: Linux-aarch64
-            os: ubuntu-20.04
+          - os-name: Linux-aarch64
+            runs-on: ubuntu-20.04
             target: aarch64-unknown-linux-musl
-          - os_name: Linux-arm
-            os: ubuntu-20.04
+          - os-name: Linux-arm
+            runs-on: ubuntu-20.04
             target: arm-unknown-linux-musleabi
-          - os_name: Linux-i686
-            os: ubuntu-20.04
+          - os-name: Linux-i686
+            runs-on: ubuntu-20.04
             target: i686-unknown-linux-musl
-          - os_name: Linux-powerpc
-            os: ubuntu-20.04
+          - os-name: Linux-powerpc
+            runs-on: ubuntu-20.04
             target: powerpc-unknown-linux-gnu
-          - os_name: Linux-powerpc64
-            os: ubuntu-20.04
+          - os-name: Linux-powerpc64
+            runs-on: ubuntu-20.04
             target: powerpc64-unknown-linux-gnu
-          - os_name: Linux-powerpc64le
-            os: ubuntu-20.04
+          - os-name: Linux-powerpc64le
+            runs-on: ubuntu-20.04
             target: powerpc64le-unknown-linux-gnu
-          - os_name: Linux-riscv64
-            os: ubuntu-20.04
+          - os-name: Linux-riscv64
+            runs-on: ubuntu-20.04
             target: riscv64gc-unknown-linux-gnu
-          - os_name: Linux-s390x
-            os: ubuntu-20.04
+          - os-name: Linux-s390x
+            runs-on: ubuntu-20.04
             target: s390x-unknown-linux-gnu
-          - os_name: Windows-i686
-            os: windows-latest
+          - os-name: NetBSD-x86_64
+            runs-on: ubuntu-20.04
+            target: x86_64-unknown-netbsd
+            skip_tests: true
+          - os-name: Windows-aarch64
+            runs-on: windows-latest
+            target: aarch64-pc-windows-msvc
+            skip_tests: true
+          - os-name: Windows-i686
+            runs-on: windows-latest
             target: i686-pc-windows-msvc
-          - os_name: Windows-x86_64
-            os: windows-latest
+          - os-name: Windows-x86_64
+            runs-on: windows-latest
             target: x86_64-pc-windows-msvc
-          - os_name: macOS-x86_64
-            os: macOS-latest
+          - os-name: macOS-x86_64
+            runs-on: macOS-latest
             target: x86_64-apple-darwin
+          - os-name: macOS-aarch64
+            runs-on: macOS-latest
+            target: aarch64-apple-darwin
         toolchain:
           - stable
-          - beta
-          - nightly
+        include:
+          - platform:
+              os-name: Linux-x86_64
+              runs-on: ubuntu-20.04
+              target: x86_64-unknown-linux-musl
+              bin: ubi
+            toolchain: beta
+          - platform:
+              os-name: Linux-x86_64
+              runs-on: ubuntu-20.04
+              target: x86_64-unknown-linux-musl
+              bin: ubi
+            toolchain: nightly
     steps:
       - uses: actions/checkout@v3
       - name: Cache cargo & target directories
         uses: Swatinem/rust-cache@v2
-      - name: Install musl-tools on Linux
-        run: sudo apt-get update --yes && sudo apt-get install --yes musl-tools
-        if: contains(matrix.platform.name, 'musl')
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: "build"
+          target: ${{ matrix.platform.target }}
+          toolchain: ${{ matrix.toolchain }}
+          args: "--release"
+          strip: false
       - name: Run tests
         uses: houseabsolute/actions-rust-cross@v0
         with:
           command: "test"
           target: ${{ matrix.platform.target }}
           toolchain: ${{ matrix.toolchain }}
+          args: "--release"
         if: ${{ !matrix.platform.skip_tests }}
