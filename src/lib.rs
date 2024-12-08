@@ -277,7 +277,7 @@ mod tests {
                 }
             };
             match env::set_current_dir(man_dir) {
-                Ok(_) => (),
+                Ok(()) => (),
                 Err(e) => {
                     println!("Error setting current dir to CARGO_MANIFEST_DIR: {e}");
                     return;
@@ -292,7 +292,7 @@ mod tests {
                 }
             };
             match env::set_current_dir(td1.path()) {
-                Ok(_) => (),
+                Ok(()) => (),
                 Err(e) => {
                     println!("Error setting current dir to tempdir: {e}");
                     return;
@@ -320,7 +320,7 @@ mod tests {
                 let mut perms = md.permissions();
                 perms.set_mode(0o0400);
                 match fs::set_permissions(td1.path(), perms) {
-                    Ok(_) => (),
+                    Ok(()) => (),
                     Err(e) => {
                         println!("Error setting permissions for tempdir: {e}");
                         return;
