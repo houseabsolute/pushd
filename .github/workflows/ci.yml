@@ -89,10 +89,8 @@ jobs:
             toolchain: nightly
     steps:
       - uses: actions/checkout@v4
-      - name: Cache cargo & target directories
-        uses: Swatinem/rust-cache@v2
       - name: Build binary
-        uses: houseabsolute/actions-rust-cross@v0
+        uses: houseabsolute/actions-rust-cross@v1
         with:
           command: "build"
           target: ${{ matrix.platform.target }}
@@ -100,7 +98,7 @@ jobs:
           args: "--release"
           strip: false
       - name: Run tests
-        uses: houseabsolute/actions-rust-cross@v0
+        uses: houseabsolute/actions-rust-cross@v1
         with:
           command: "test"
           target: ${{ matrix.platform.target }}
