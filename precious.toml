@@ -33,7 +33,6 @@ cmd = [
     "clippy",
     "--fix",
     "--allow-dirty",
-    "--locked",
     "--all-targets",
     "--all-features",
     "--",
