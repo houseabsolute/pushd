@@ -9,7 +9,7 @@ on:
   pull_request:
 
 env:
-  CRATE_NAME: precious
+  CRATE_NAME: pushd
   GITHUB_TOKEN: ${{ github.token }}
   RUST_BACKTRACE: 1
 
@@ -24,7 +24,7 @@ jobs:
           - os-name: FreeBSD-x86_64
             runs-on: ubuntu-20.04
             target: x86_64-unknown-freebsd
-            skip_tests: true
+            skip-tests: true
           - os-name: Linux-x86_64
             runs-on: ubuntu-20.04
             target: x86_64-unknown-linux-musl
@@ -55,11 +55,11 @@ jobs:
           - os-name: NetBSD-x86_64
             runs-on: ubuntu-20.04
             target: x86_64-unknown-netbsd
-            skip_tests: true
+            skip-tests: true
           - os-name: Windows-aarch64
             runs-on: windows-latest
             target: aarch64-pc-windows-msvc
-            skip_tests: true
+            skip-tests: true
           - os-name: Windows-i686
             runs-on: windows-latest
             target: i686-pc-windows-msvc
@@ -104,4 +104,4 @@ jobs:
           target: ${{ matrix.platform.target }}
           toolchain: ${{ matrix.toolchain }}
           args: "--release"
-        if: ${{ !matrix.platform.skip_tests }}
+        if: ${{ !matrix.platform.skip-tests }}
